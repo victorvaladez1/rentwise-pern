@@ -4,6 +4,6 @@ const { createPayment, getPayments } = require("../controllers/paymentController
 const verifyToken = require("../middleware/authMiddleware");
 
 router.post("/", verifyToken, createPayment);
-router.get("/", verityToken, getPayments);
+router.get("/", verifyToken, getPayments);
 
 module.exports = router;
