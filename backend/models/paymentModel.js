@@ -21,4 +21,24 @@ async function getPaymentsByUser(userId) {
     return result.rows;
 }
 
-module.exports = { addPayment, getPaymentsByUser };
+async function getRentSummaryByProperty(userId) {
+    const result = await pool.query(
+    `
+        SELECT
+            properties.id AS property_id,
+            properties.name AS property_name,
+            SUM(payments.amount) AS total_rent
+        FROM payments
+        JOIN leases ON leases.id = payments.lease_id
+        JOIN properties ON properties.id = leases.property_id
+        WHERE payments.user_id = $1
+        GROUP BY properties.id
+        ORDER BY total_rent DESC
+    `,
+    [userId]
+    );
+
+    return result.rows;
+}
+
+module.exports = { addPayment, getPaymentsByUser, getRentSummaryByProperty };
