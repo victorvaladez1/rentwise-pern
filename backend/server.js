@@ -4,6 +4,8 @@ const pool = require("./db");
 
 const authRoutes = require("./routes/auth");
 
+const verifyToken = require("./middleware/authMiddleware");
+
 require("dotenv").config();
 
 const app = express();
