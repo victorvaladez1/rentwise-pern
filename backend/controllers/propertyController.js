@@ -1,4 +1,9 @@
-const { getUserProperties, createProperty } = require("../models/propertyModel");
+const { 
+    getUserProperties, 
+    createProperty,
+    updateProperty,
+    deleteProperty
+ } = require("../models/propertyModel");
 
 async function getProperties(req, res) {
     try {
@@ -28,4 +33,25 @@ async function addProperty(req, res) {
     }
 }
 
-module.exports = { getProperties, addProperty }
+async function editProperty(req, res) {
+    const propertyId = req.params.id;
+    const userId = req.user.id;
+    const updates = req.body;
+
+    try {
+        const updated = await updateProperty(userId, propertyId, updates);
+        if (!updated) return res.status(404).json({ error: "Not found or not authorized" });
+        res.json(updated);
+    } catch (err) {
+        console.error("Edit Property Error:", err);
+        res.status(500).send("Server error");
+    }
+}
+
+
+
+module.exports = { 
+    getProperties, 
+    addProperty,
+    editProperty
+}
