@@ -41,4 +41,21 @@ async function getRentSummaryByProperty(userId) {
     return result.rows;
 }
 
-module.exports = { addPayment, getPaymentsByUser, getRentSummaryByProperty };
+async function getMonthlyRentBreakdown(userId) {
+    const result = await pool.query(
+        `
+            SELECT
+                TO_CHAR(date_paid, 'YYYY-MM') AS month,
+                SUM(amount)::NUMERIC(10, 2) AS total
+            FROM payments
+            WHERE user_id = $1
+            GROUP BY month
+            ORDER BY month
+        `,
+        [userId]
+    );
+
+    return result.rows;
+}
+
+module.exports = { addPayment, getPaymentsByUser, getRentSummaryByProperty, getMonthlyRentBreakdown };
