@@ -1,4 +1,4 @@
-const { createLease, getLeaseByUser } = require("../models/leaseModel");
+const { createLease, getLeasesByUser } = require("../models/leaseModel");
 
 async function addLease(req, res) {
     try {

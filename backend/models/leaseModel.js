@@ -23,6 +23,7 @@ async function createLease(userId, lease) {
 async function getLeasesByUser(userId) {
     const result = await pool.query(
         `SELECT * FROM leases WHERE user_id = $1 ORDER BY start_date DESC`,
+        [userId]
     );
     return result.rows;
 }
