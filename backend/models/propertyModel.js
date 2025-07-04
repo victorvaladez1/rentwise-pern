@@ -16,6 +16,25 @@ async function createProperty(userId, name, address, type, status) {
   return result.rows[0];
 }
 
+async function updateProperty(userId, propertyId, updates) {
+  const { name, address, type, status} = updates;
+
+  const result = await pool.query(
+    `UPDATE properties
+    SET name = $1,
+        address = $2,
+        type = $3,
+        status = $4
+    WHERE id = $5 AND user_id = $6
+    RETURNING *`,
+    [name, address, type, status, propertyId, userId]
+  );
+
+  return result.rows[0];
+}
+
+
+
 module.exports = {
   getUserProperties,
   createProperty,
