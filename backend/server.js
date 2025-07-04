@@ -3,6 +3,7 @@ const cors = require("cors");
 const pool = require("./db");
 
 const authRoutes = require("./routes/auth");
+const propertyRoutes = require("./routes/properties");
 
 const verifyToken = require("./middleware/authMiddleware");
 
@@ -14,6 +15,7 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 app.use("/api/auth", authRoutes);
+app.use("/api/properties", propertyRoutes);
 
 app.get("/api/test", async (req, res) => {
     try {
