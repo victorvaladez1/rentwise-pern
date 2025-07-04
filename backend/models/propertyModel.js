@@ -33,9 +33,18 @@ async function updateProperty(userId, propertyId, updates) {
   return result.rows[0];
 }
 
+async function deleteProperty(userId, propertyId) {
+  const result = await pool.query(
+    "DELETE FROM properties WHERE id = $1 AND user_id = $2 RETURNING *",
+    [propertyId, userId]
+  );
 
+  return result.rows[0];
+}
 
 module.exports = {
   getUserProperties,
   createProperty,
+  updateProperty,
+  deleteProperty
 };
