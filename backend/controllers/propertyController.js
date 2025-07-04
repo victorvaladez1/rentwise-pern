@@ -48,10 +48,23 @@ async function editProperty(req, res) {
     }
 }
 
+async function removeProperty(req, res) {
+    const propertyId = req.params.id;
+    const userId = req.user.id;
 
+    try {
+        const deleted = await deleteProperty(userId, propertyId);
+        if (!deleted) return res.status(404).json({ error: "Not found or not authorized" });
+        res.json({ message: "Property delted", id: deleted.id });
+    } catch (err) {
+        console.error("Delete Property Error:", err);
+        res.status(500).send("Server error");
+    }
+}
 
 module.exports = { 
     getProperties, 
     addProperty,
-    editProperty
+    editProperty,
+    removeProperty
 }
