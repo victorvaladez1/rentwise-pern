@@ -5,6 +5,7 @@ const pool = require("./db");
 const authRoutes = require("./routes/auth");
 const propertyRoutes = require("./routes/properties");
 const leaseRoutes = require("./routes/leases");
+const paymentRoutes = require("./routes/payments");
 
 const verifyToken = require("./middleware/authMiddleware");
 
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/properties", propertyRoutes);
 app.use("/api/leases", leaseRoutes);
+app.use("/api/payments", paymentRoutes);
 
 app.get("/api/test", async (req, res) => {
     try {
