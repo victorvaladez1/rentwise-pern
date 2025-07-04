@@ -1,4 +1,4 @@
-const { addPayment, getPaymentsByUser, getRentSummaryByProperty } = require("../models/paymentModel");
+const { addPayment, getPaymentsByUser, getRentSummaryByProperty, getMonthlyRentBreakdown } = require("../models/paymentModel");
 
 async function createPayment(req, res) {
     try {
@@ -30,4 +30,14 @@ async function getRentSummary(req, res) {
     }
 }
 
-module.exports = { createPayment, getPayments, getRentSummary };
+async function getMonthlyBreakdown(req, res) {
+    try {
+        const data = await getMonthlyRentBreakdown(req.user.id);
+        res.json(data);
+    } catch (err) {
+        console.error("Monthly Breakdown Error", err);
+        res.status(500).send("Server error");
+    }
+}
+
+module.exports = { createPayment, getPayments, getRentSummary, getMonthlyBreakdown };
