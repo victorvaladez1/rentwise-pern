@@ -1,12 +1,22 @@
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Dashboard from "./pages/Dashboard";
+import Expenses from "./pages/Expenses";
+import Login from "./pages/Login";
+
 function App() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600 text-white">
-      <div className="text-center space-y-4">
-        <h1 className="text-4xl font-bold">🚀 Tailwind + Vite + TS</h1>
-        <p className="text-lg">You're ready to build RentWise with style.</p>
+    <Router>
+      <Navbar />
+      <div className="p-6">
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/expenses" element={<Expenses />} />
+          <Route path="/login" element={<Login />} />
+        </Routes>
       </div>
-    </div>
-  )
+    </Router>
+  );
 }
 
 export default App;
