@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Dashboard from "./pages/Dashboard";
 import Expenses from "./pages/Expenses";
-import Login from "./pages/Login.tsx";
+import Login from "./pages/LoginPage.tsx";
 
 function App() {
   return (
