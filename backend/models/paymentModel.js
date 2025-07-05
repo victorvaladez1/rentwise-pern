@@ -81,4 +81,4 @@ async function getNetProfitByProperty(userId) {
     return result.rows;
 }
 
-module.exports = { addPayment, getPaymentsByUser, getRentSummaryByProperty, getMonthlyRentBreakdown };
+module.exports = { addPayment, getPaymentsByUser, getRentSummaryByProperty, getMonthlyRentBreakdown, getNetProfitByProperty };

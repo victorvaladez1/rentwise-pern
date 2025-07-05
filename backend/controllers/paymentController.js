@@ -1,4 +1,4 @@
-const { addPayment, getPaymentsByUser, getRentSummaryByProperty, getMonthlyRentBreakdown } = require("../models/paymentModel");
+const { addPayment, getPaymentsByUser, getRentSummaryByProperty, getMonthlyRentBreakdown, getNetProfitByProperty } = require("../models/paymentModel");
 
 async function createPayment(req, res) {
     try {
@@ -40,4 +40,14 @@ async function getMonthlyBreakdown(req, res) {
     }
 }
 
-module.exports = { createPayment, getPayments, getRentSummary, getMonthlyBreakdown };
+async function getProfitSummary(req, res) {
+    try {
+        const data = await getNetProfitByProperty(req.user.id);
+        res.json(data);
+    } catch (err) {
+        console.error("Profit Summary Error:", err);
+        res.status(500).send("Server error");
+    }
+}
+
+module.exports = { createPayment, getPayments, getRentSummary, getMonthlyBreakdown, getProfitSummary };
