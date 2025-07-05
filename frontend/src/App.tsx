@@ -1,22 +1,26 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
-import Dashboard from "./pages/DashboardPage.tsx";
-import Expenses from "./pages/Expenses";
-import Login from "./pages/LoginPage.tsx";
+import React from 'react'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { AuthProvider } from './context/AuthContext'
+import ProtectedRoute from './routes/ProtectedRoute'
+import LoginPage from './pages/LoginPage'
+import DashboardPage from './pages/DashboardPage'
 
-function App() {
+const App: React.FC = () => {
   return (
-    <Router>
-      <Navbar />
-      <div className="p-6">
+    <AuthProvider>
+      <Router>
         <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/expenses" element={<Expenses />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Navigate to="/dashboard" />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/dashboard" element={
+            <ProtectedRoute>
+              <DashboardPage />
+            </ProtectedRoute>
+          } />
         </Routes>
-      </div>
-    </Router>
-  );
+      </Router>
+    </AuthProvider>
+  )
 }
 
-export default App;
+export default App
