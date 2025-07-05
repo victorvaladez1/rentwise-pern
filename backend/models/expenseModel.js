@@ -1,4 +1,4 @@
-const pool = require("..db");
+const pool = require("../db");
 
 async function addExpense(userId, data) {
     const { property_id, amount, category, description, date } = data;
@@ -14,7 +14,7 @@ async function addExpense(userId, data) {
 }
 
 async function getExpensesByUser(userId) {
-    const resulst = await pool.query(
+    const result = await pool.query(
         `SELECT * FROM expenses WHERE user_id = $1 ORDER BY date DESC`,
         [userId]
     );
