@@ -6,6 +6,7 @@ const authRoutes = require("./routes/auth");
 const propertyRoutes = require("./routes/properties");
 const leaseRoutes = require("./routes/leases");
 const paymentRoutes = require("./routes/payments");
+const expenseRoutes = require("./routes/expenses");
 
 const verifyToken = require("./middleware/authMiddleware");
 
@@ -20,6 +21,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/properties", propertyRoutes);
 app.use("/api/leases", leaseRoutes);
 app.use("/api/payments", paymentRoutes);
+app.use("/api/expenses", expenseRoutes);
 
 app.get("/api/test", async (req, res) => {
     try {
