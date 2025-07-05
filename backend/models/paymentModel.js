@@ -58,4 +58,27 @@ async function getMonthlyRentBreakdown(userId) {
     return result.rows;
 }
 
+async function getNetProfitByProperty(userId) {
+    const result = await pool.query(
+        `
+            SELECT
+                p.id AS property_id,
+                p.name AS property_name,
+                COALESCE(SUM(pay.amount), 0) AS total_rent,
+                COALESCE(SUM(exp.amount), 0) AS total_expense,
+                COALESCE(SUM(pay.amount), 0) - COALESCE(SUM(exp.amount), 0) AS net_profit
+            FROM properties p
+            LEFT JOIN leases l ON p.id = l.property_id AND l.user_id = $1
+            LEFT JOIN payments pay ON l.id = pay.lease_id AND pay.user_id = $1
+            LEFT JOIN expenses exp ON p.id = exp.property_id AND exp.user_id = $1
+            WHERE p.user_id = $1
+            GROUP BY p.id
+            ORDER BY net_profit DESC
+        `,
+        [userId]
+    );
+
+    return result.rows;
+}
+
 module.exports = { addPayment, getPaymentsByUser, getRentSummaryByProperty, getMonthlyRentBreakdown };
