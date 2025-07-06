@@ -1,7 +1,17 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios'
 import Layout from '../components/Layout';
+
+  interface Property {
+    id: number,
+    address: string,
+    city: string,
+    state: string,
+    zip: string,
+    rent: number
+  }
 
 const DashboardPage: React.FC = () => {
   const { logout } = useAuth();
@@ -11,6 +21,21 @@ const DashboardPage: React.FC = () => {
     logout();
     navigate('/login');
   };
+
+  const  [properties, setProperties] = useState<Property[]>([])
+
+  useEffect(() => {
+    const fetchProperties = async () => {
+      try {
+        const res = await axios.get('http://localhost:5000/api/properties', {withCredentials: true})
+        setProperties(res.data)
+      } catch (err) {
+        console.error('Error fetching properties', err)
+      }
+    }
+
+    fetchProperties()
+  }, [])
 
   return (
     <Layout>
