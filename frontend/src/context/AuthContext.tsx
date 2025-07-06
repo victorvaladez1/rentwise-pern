@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import axios from 'axios';
 
 interface AuthContextType {
     isAuthenticated: boolean
@@ -9,18 +10,32 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-        return localStorage.getItem('isAuthenticated') === 'true'
-    })
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+
+    useEffect(() => {
+        const checkAuth = async () => {
+            try {
+                await axios.get("http://localhost:5000/api/auth/me", {
+                    withCredentials: true,
+                });
+                setIsAuthenticated(true);
+            } catch (err) {
+                setIsAuthenticated(false);
+            }
+        };
+
+        checkAuth();
+    }, []);
+
 
     const login = () => {
         setIsAuthenticated(true);
         localStorage.setItem('isAuthenticated', 'true');
     }
 
-    const logout = () => {
+    const logout = async () => {
+        await axios.post("http://localhost:5000/api/auth/logout", {}, {withCredentials: true });
         setIsAuthenticated(false)
-        localStorage.removeItem('isAuthentiacted')
     }
 
     return (

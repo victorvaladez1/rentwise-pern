@@ -41,11 +41,33 @@ async function login(req, res) {
             expiresIn: "1h",
         });
 
-        res.json({ token });
+        const ONE_HOUR = 1000 * 60 * 60;
+
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            maxAge: ONE_HOUR,
+        });
+
+        res.json({ message: "Login successful" });
+
     } catch (err) {
         console.error("Login error:", err);
         res.status(500).json({ error: "Server error" });
     }
 }
 
-module.exports = { register, login };
+async function logout(req, res) {
+    res.clearCookie("token");
+    res.json({ message: "Logged out"});
+}
+
+async function me(req, res) {
+    res.json({
+        id: req.user.id,
+        role: req.user.role
+    });
+};
+
+module.exports = { register, login, logout, me };
