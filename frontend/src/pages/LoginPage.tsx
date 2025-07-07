@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { Link } from 'react-router-dom'
 import axios from 'axios'
 
 const LoginPage: React.FC = () => {
@@ -53,6 +54,12 @@ const LoginPage: React.FC = () => {
                 >
                     Login
                 </button>
+                <p className="text-sm text-center text-gray-600">
+                    Don't have an account?{' '}
+                    <Link to="/register" className="text-blue-600 hover:underline">
+                        Register here
+                    </Link>
+                </p>
             </form>
         </div>
     )
