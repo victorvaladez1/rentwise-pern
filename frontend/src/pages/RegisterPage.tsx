@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+const { login } = useAuth();
 import axios from 'axios';
 
 const RegisterPage: React.FC = () => {
@@ -27,7 +29,15 @@ const RegisterPage: React.FC = () => {
                 withCredentials: true
             });
 
-            navigate('/login');
+            await axios.post('http://localhost:5000/api/auth/login', {
+                email,
+                password
+            }, {
+                withCredentials:  true
+            });
+
+            login();
+            navigate('/dashboard');
         } catch (err: any) {
             console.error('Registration failed:', err);
             alert(err.response?.data?.error || 'Registration failed. Try again.');
