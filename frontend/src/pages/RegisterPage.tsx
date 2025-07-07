@@ -8,6 +8,7 @@ const RegisterPage: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [role, setRole] = useState('manager');
     const navigate = useNavigate();
 
@@ -21,6 +22,8 @@ const RegisterPage: React.FC = () => {
         }
 
         try {
+            setIsSubmitting(true);
+
             await axios.post('http://localhost:5000/api/auth/register', {
                 email,
                 password,
@@ -41,6 +44,8 @@ const RegisterPage: React.FC = () => {
         } catch (err: any) {
             console.error('Registration failed:', err);
             alert(err.response?.data?.error || 'Registration failed. Try again.');
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -85,10 +90,10 @@ const RegisterPage: React.FC = () => {
                 </select>
 
                 <button
-                    type="submit"
+                    type="submit" disabled={isSubmitting}
                     className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition"
                 >
-                    Register
+                    {isSubmitting ? "Registering..." : "Register"}
                 </button>
 
                 <p className="text-sm text-center text-gray-600">
