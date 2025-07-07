@@ -5,11 +5,18 @@ import axios from 'axios';
 const RegisterPage: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [role, setRole] = useState('manager');
     const navigate = useNavigate();
 
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (password !== confirmPassword)
+        {
+            alert("passwords do not match.");
+            return;
+        }
 
         try {
             await axios.post('http://localhost:5000/api/auth/register', {
@@ -48,6 +55,15 @@ const RegisterPage: React.FC = () => {
                     className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
                     required
                 />
+                <input
+                    type="password"
+                    placeholder="Confirm Password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                    required
+                >  
+                </input>
                 <select
                     value={role}
                     onChange={(e) => setRole(e.target.value)}
