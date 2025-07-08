@@ -32,24 +32,38 @@ import Layout from '../components/Layout';
     note: string | null;
   }
 
+  interface Lease{
+    id: number,
+    user_id: number,
+    property_id: number,
+    tenant_name: string,
+    rent_amount: number,
+    start_date: string,
+    end_date: string,
+    is_active?: boolean
+  }
+
 const DashboardPage: React.FC = () => {
 
   const [properties, setProperties] = useState<Property[]>([]);
   const [tenants, setTenants] = useState<Tenant[]>([]);
   const [monthlyPayments, setMonthlyPayments] = useState<Payment[]>([]);
+  const [expiringLeases, setExpiringLeases] = useState<Lease[]>([]);
 
   useEffect(() => {
     const fetchAllData = async () => {
       try {
-        const [propRes, tenantRes, monthlyRes] = await Promise.all([
+        const [propRes, tenantRes, monthlyRes, expiringRes] = await Promise.all([
           axios.get('http://localhost:5000/api/properties', {withCredentials: true}),
           axios.get('http://localhost:5000/api/leases', {withCredentials: true}),
-          axios.get('http://localhost:5000/api/payments/this-month', { withCredentials: true})
+          axios.get('http://localhost:5000/api/payments/this-month', { withCredentials: true}),
+          axios.get('http://localhost:5000/api/leases/expiring-leases', {withCredentials: true})
         ]);
 
         setProperties(propRes.data);
         setTenants(tenantRes.data);
         setMonthlyPayments(monthlyRes.data);
+        setExpiringLeases(expiringRes.data);
 
       } catch (err) {
         console.error('Dashboard data fetch failed', err);
@@ -84,7 +98,7 @@ const DashboardPage: React.FC = () => {
           </div>
           <div className="bg-white shadow rounded p-6">
             <h3 className="text-sm text-gray-500">Leases Expiring Soon</h3>
-            <p className="text-2xl font-bold">2</p>
+            <p className="text-2xl font-bold">{expiringLeases.length}</p>
           </div>
         </div>
       </div>

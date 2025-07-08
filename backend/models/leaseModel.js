@@ -28,4 +28,20 @@ async function getLeasesByUser(userId) {
     return result.rows;
 }
 
-module.exports = { createLease, getLeasesByUser };
+async function getExpiringLeases(userId) {
+    const result = await pool.query(
+        `SELECT * FROM leases
+         WHERE user_id = $1
+           AND end_date BETWEEN CURRENT_DATE AND CURRENT_DATE + INTERVAL '60 days'
+         ORDER BY end_date ASC`,
+        [userId]
+    );
+
+    return result.rows;
+}
+
+module.exports = { 
+    createLease, 
+    getLeasesByUser,
+    getExpiringLeases
+};
