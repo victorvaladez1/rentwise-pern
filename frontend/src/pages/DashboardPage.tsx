@@ -13,22 +13,6 @@ import Layout from '../components/Layout';
 
 const DashboardPage: React.FC = () => {
 
-
-  const  [properties, setProperties] = useState<Property[]>([])
-
-  useEffect(() => {
-    const fetchProperties = async () => {
-      try {
-        const res = await axios.get('http://localhost:5000/api/properties', {withCredentials: true})
-        setProperties(res.data)
-      } catch (err) {
-        console.error('Error fetching properties', err)
-      }
-    }
-
-    fetchProperties()
-  }, [])
-
   return (
     <Layout>
       <div className="min-h-[80vh] flex items-center justify-center bg-gray-100">
