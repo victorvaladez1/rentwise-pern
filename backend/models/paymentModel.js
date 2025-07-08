@@ -80,5 +80,19 @@ async function getNetProfitByProperty(userId) {
   return result.rows;
 }
 
+async function getPaymentsThisMonth(userId) {
+    const result = await pool.query(
+        `SELECT *
+        FROM payments
+        WHERE user_id = $1
+            AND EXTRACT (MONTH FROM date_paid) = EXTRACT(MONTH FROM CURRENT_DATE)
+            AND EXTRACT(YEAR FROM date_paid) = EXTRACT(YEAR FROM CURRENT_DATE)
+        `,
+        [userId]
+    );
 
-module.exports = { addPayment, getPaymentsByUser, getRentSummaryByProperty, getMonthlyRentBreakdown, getNetProfitByProperty };
+    return result.rows;
+}
+
+
+module.exports = { addPayment, getPaymentsByUser, getRentSummaryByProperty, getMonthlyRentBreakdown, getNetProfitByProperty, getPaymentsThisMonth };

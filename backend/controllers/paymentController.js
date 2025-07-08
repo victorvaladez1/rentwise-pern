@@ -1,4 +1,4 @@
-const { addPayment, getPaymentsByUser, getRentSummaryByProperty, getMonthlyRentBreakdown, getNetProfitByProperty } = require("../models/paymentModel");
+const { addPayment, getPaymentsByUser, getRentSummaryByProperty, getMonthlyRentBreakdown, getNetProfitByProperty, getPaymentsThisMonth } = require("../models/paymentModel");
 
 async function createPayment(req, res) {
     try {
@@ -50,4 +50,21 @@ async function getProfitSummary(req, res) {
     }
 }
 
-module.exports = { createPayment, getPayments, getRentSummary, getMonthlyBreakdown, getProfitSummary };
+async function getPaymentsThisMonthController(req, res) {
+    try {
+        const payments = await getPaymentsThisMonth(req.user.id);
+        res.json(payments);
+    } catch (err) {
+        console.error("Payments This Month Error", err);
+        res.status(500).send("Server error");
+    }
+}
+
+module.exports = {
+     createPayment, 
+     getPayments, 
+     getRentSummary, 
+     getMonthlyBreakdown, 
+     getProfitSummary, 
+     getPaymentsThisMonthController 
+};
