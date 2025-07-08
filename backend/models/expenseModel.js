@@ -21,3 +21,5 @@ async function getExpensesByUser(userId) {
 
     return result.rows;
 }
+
+module.exports = {addExpense, getExpensesByUser}; 

@@ -1,4 +1,4 @@
-const { createLease, getLeasesByUser } = require("../models/leaseModel");
+const { createLease, getLeasesByUser, getExpiringLeases } = require("../models/leaseModel");
 
 async function addLease(req, res) {
     try {
@@ -20,4 +20,14 @@ async function getLeases(req, res) {
     }
 }
 
-module.exports = { addLease, getLeases };
+async function getExpiringLeasesController(req, res) {
+    try {
+        const leases = await getExpiringLeases(req.user.id);
+        res.json(leases);
+    } catch (err) {
+        console.error("Get Expiring Error:", err);
+        res.status(500).send("Server error");
+    }
+}
+
+module.exports = { addLease, getLeases, getExpiringLeasesController };

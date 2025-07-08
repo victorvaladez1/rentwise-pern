@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios'
 import Layout from '../components/Layout';
 
@@ -13,42 +11,95 @@ import Layout from '../components/Layout';
     rent: number
   }
 
+  interface Tenant {
+    id: number,
+    user_id: number,
+    property_id: number,
+    tenant_name: string,
+    rent_amount: string,
+    start_date: string,
+    end_date: string,
+    is_active: boolean
+  }
+
+  interface Payment {
+    id: number,
+    user_id: number,
+    lease_id: number,
+    amount: number,
+    date_paid: string,
+    is_late: boolean,
+    note: string | null;
+  }
+
+  interface Lease{
+    id: number,
+    user_id: number,
+    property_id: number,
+    tenant_name: string,
+    rent_amount: number,
+    start_date: string,
+    end_date: string,
+    is_active?: boolean
+  }
+
 const DashboardPage: React.FC = () => {
-  const { logout } = useAuth();
-  const navigate = useNavigate();
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
-
-  const  [properties, setProperties] = useState<Property[]>([])
+  const [properties, setProperties] = useState<Property[]>([]);
+  const [tenants, setTenants] = useState<Tenant[]>([]);
+  const [monthlyPayments, setMonthlyPayments] = useState<Payment[]>([]);
+  const [expiringLeases, setExpiringLeases] = useState<Lease[]>([]);
 
   useEffect(() => {
-    const fetchProperties = async () => {
+    const fetchAllData = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/properties', {withCredentials: true})
-        setProperties(res.data)
-      } catch (err) {
-        console.error('Error fetching properties', err)
-      }
-    }
+        const [propRes, tenantRes, monthlyRes, expiringRes] = await Promise.all([
+          axios.get('http://localhost:5000/api/properties', {withCredentials: true}),
+          axios.get('http://localhost:5000/api/leases', {withCredentials: true}),
+          axios.get('http://localhost:5000/api/payments/this-month', { withCredentials: true}),
+          axios.get('http://localhost:5000/api/leases/expiring-leases', {withCredentials: true})
+        ]);
 
-    fetchProperties()
-  }, [])
+        setProperties(propRes.data);
+        setTenants(tenantRes.data);
+        setMonthlyPayments(monthlyRes.data);
+        setExpiringLeases(expiringRes.data);
+
+      } catch (err) {
+        console.error('Dashboard data fetch failed', err);
+      };
+    };
+
+    fetchAllData();
+  }, []);
+
+  const totalThisMonth = monthlyPayments.reduce(
+    (sum, p) => sum + Number(p.amount),
+    0
+  );
 
   return (
     <Layout>
-      <div className="min-h-[80vh] flex items-center justify-center bg-gray-100">
-        <div className="text-center space-y-4">
-          <h1 className="text-3xl font-bold">Welcome to RentWise</h1>
-          <p className="text-lg">You're successfully authenticated.</p>
-          <button
-            onClick={handleLogout}
-            className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
-          >
-            Logout
-          </button>
+      <div className="min-h-[80vh] px-6 py-10 bg-gray-100">
+        <h1 className="text-2xl font-semibold">Welcome to RentWise!</h1>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-10">
+          <div className="bg-white shadow rounded p-6">
+            <h3 className="text-sm text-gray-500">Total Properties</h3>
+            <p className="text-2xl font-bold">{properties.length}</p>
+          </div>
+          <div className="bg-white shadow rounded p-6">
+            <h3 className="text-sm text-gray-500">Total Tenants</h3>
+            <p className="text-2xl font-bold">{tenants.length}</p>
+          </div>
+          <div className="bg-white shadow rounded p-6">
+            <h3 className="text-sm text-gray-500">Payments This Month</h3>
+            <p className="text-2xl font-bold">${totalThisMonth.toLocaleString()}</p>
+          </div>
+          <div className="bg-white shadow rounded p-6">
+            <h3 className="text-sm text-gray-500">Leases Expiring Soon</h3>
+            <p className="text-2xl font-bold">{expiringLeases.length}</p>
+          </div>
         </div>
       </div>
     </Layout>

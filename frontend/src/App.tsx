@@ -5,10 +5,10 @@ import ProtectedRoute from './routes/ProtectedRoute';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
-import PropertiesPage from './pages/Properties';
-import TenantsPage from './pages/Tenants';
-import PaymentsPage from './pages/Payments';
-import SettingsPage from './pages/Settings';
+import PropertiesPage from './pages/PropertiesPage';
+import TenantsPage from './pages/TenantsPage';
+import PaymentsPage from './pages/PaymentsPage';
+import SettingsPage from './pages/SettingsPage';
 
 const App: React.FC = () => {
   return (
