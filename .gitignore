@@ -1,36 +1,6 @@
-# Node
-node_modules/
+﻿node_modules/
 .env
-.env.local
-.env.*.local
-
-# Logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-
-# Build outputs
 dist/
 build/
-.vite/
-
-# Vite
-*.local
-*.cache
-
-# TypeScript
-*.tsbuildinfo
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Editor/IDE settings
-.vscode/
-.idea/
-*.sw?
-
-# Misc
-coverage/
 *.log
+.DS_Store
