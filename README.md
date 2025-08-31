@@ -1,1 +1,1 @@
-﻿# Clean slate
+﻿Fresh start: PERN + Supabase (minimal)
