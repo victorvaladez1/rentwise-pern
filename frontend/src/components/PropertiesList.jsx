@@ -27,12 +27,27 @@ export default function PropertiesList() {
     };
   }, []);
 
+  async function handleDelete(id) {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this property?"
+    );
+    if (!confirmed) return;
+
+    try {
+      await axios.delete(`/api/properties/${id}`);
+      setProperties((prev) => prev.filter((p) => p.id !== id));
+    } catch (err) {
+      console.log("Delete failed:", err);
+      alert("Failed to delete property.");
+    }
+  }
+
   return (
     <section className="space-y-4 mt-6">
       {!loading && !error && properties.length > 0 && (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {properties.map((p) => (
-            <PropertyCard key={p.id} p={p} />
+            <PropertyCard key={p.id} p={p} onDelete={handleDelete} />
           ))}
         </div>
       )}

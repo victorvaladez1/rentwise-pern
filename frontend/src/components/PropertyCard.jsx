@@ -1,4 +1,4 @@
-export default function PropertyCard({ p }) {
+export default function PropertyCard({ p, onDelete }) {
   const address = [
     p.line_1,
     p.line_2,
@@ -41,6 +41,13 @@ export default function PropertyCard({ p }) {
       {address && (
         <p className="mt-3 truncate text-sm text-gray-500">{address}</p>
       )}
+
+      <button
+        onClick={() => onDelete(p.id)}
+        className="mt-3 rounded-full bg-red-100 px-2 py-1 text-xs text-red-600 hover:bg-red-200"
+      >
+        Delete
+      </button>
     </div>
   );
 }
