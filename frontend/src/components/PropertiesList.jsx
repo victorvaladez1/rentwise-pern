@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import PropertyCard from "./PropertyCard";
+import SkeletonCard from "./SkeletonCard";
 import axios from "axios";
 
 export default function PropertiesList() {
@@ -8,6 +10,7 @@ export default function PropertiesList() {
 
   useEffect(() => {
     let ignore = false;
+
     async function fetchProperties() {
       try {
         const res = await axios.get("/api/properties");
@@ -18,38 +21,38 @@ export default function PropertiesList() {
         if (!ignore) setLoading(false);
       }
     }
-    fetchProperties();
+    setTimeout(() => fetchProperties(), 2000);
     return () => {
       ignore = true;
     };
   }, []);
 
   return (
-    <div className="rounded-2xl border bg-gray-50 p-6 shadow-sm mt-6">
-      {loading && <p>Loading properties ...</p>}
-      {error && <p className="text-red-500">Error: {error}</p>}
-      <ul>
-        {properties.length > 0 ? (
-          properties.map((p) => (
-            <li className=" p-6 mt-6" key={p.id}>
-              <h3>{p.title}</h3>
-              <div>
-                <p>{p.description}</p>
-                <p>{p.property_type}</p>
-                <p>Bedrooms: {p.bedrooms}</p>
-                <p>Bathrooms: {p.bathrooms}</p>
-                <p>Max guests: {p.max_guests}</p>
-                <p>
-                  Address: {p.line_1}, {p.line_2} {p.city}, {p.state},
-                  {p.country}, {p.postal_code}
-                </p>
-              </div>
-            </li>
-          ))
-        ) : (
-          <p>No properties</p>
-        )}
-      </ul>
-    </div>
+    <section className="space-y-4 mt-6">
+      {!loading && !error && properties.length > 0 && (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {properties.map((p) => (
+            <PropertyCard key={p.id} p={p} />
+          ))}
+        </div>
+      )}
+
+      {error && (
+        <div
+          role="alert"
+          className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700"
+        >
+          Failed to load properties: {error}
+        </div>
+      )}
+
+      {loading && !error && (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <SkeletonCard key={i} />
+          ))}
+        </div>
+      )}
+    </section>
   );
 }
