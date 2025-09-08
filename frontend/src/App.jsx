@@ -1,43 +1,42 @@
-import { useEffect, useState } from "react";
-import { http } from "./lib/http";
+import { NavLink, Routes, Route, Navigate } from "react-router-dom";
+import Home from "./pages/Home";
+import Contact from "./pages/Contact";
+import About from "./pages/About";
+import NotFound from "./pages/NotFound";
 
 export default function App() {
-  const [health, setHealth] = useState(null);
-  const [err, setErr] = useState(null);
-
-  useEffect(() => {
-    http
-      .get("/health")
-      .then((r) => setHealth(r.data))
-      .catch((e) => setErr(e.message));
-  }, []);
+  const link = ({ isActive }) =>
+    "px-3 py-2 rounded-lg text-sm " +
+    (isActive ? "bg-indigo-600 text-white" : "text-gray-700 hover:bg-gray-100");
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900">
+    <div className="min-h-screen bg-gray-100 text-gray-900">
       <header className="border-b bg-white">
-        <div className="mx-auto max-w-5xl px-6 py-4">
-          <h1 className="text-2xl font-semibold">RentWise Frontend</h1>
-          <p className="text-sm text-gray-600">
-            Vite + React + same-origin API
-          </p>
+        <div className="mx-auto max-w-5xl px-6 py-4 flex items-center gap-6">
+          <NavLink to="/" className="text-xl font-semibold">
+            RentWise
+          </NavLink>
+          <nav className="flex gap-2">
+            <NavLink to="/" className={link}>
+              Home
+            </NavLink>
+            <NavLink to="/about" className={link}>
+              About
+            </NavLink>
+            <NavLink to="/contact" className={link}>
+              Contact
+            </NavLink>
+          </nav>
         </div>
       </header>
 
-      <main className="mx-auto max-w-5xl px-6 py-10">
-        <section className="rounded-2xl border bg-white p-6 shadow-sm">
-          <h2 className="mb-3 text-lg font-medium">API health</h2>
-          {err ? (
-            <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-red-700">
-              {err}
-            </div>
-          ) : health ? (
-            <pre className="overflow-x-auto rounded-lg border bg-gray-50 p-3 text-sm">
-              {JSON.stringify(health, null, 2)}
-            </pre>
-          ) : (
-            <span className="text-gray-500">checking...</span>
-          )}
-        </section>
+      <main className="mx-auto max-w-5xl px-6 py-8">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
       </main>
     </div>
   );
