@@ -15,6 +15,16 @@ router.get("/", async (_req, res, next) => {
 
 router.post("/", async (req, res, next) => {
   try {
+    const payload = req.body;
+
+    const { data, error } = await supabase
+      .from("properties")
+      .insert(payload)
+      .select();
+
+    if (error) throw error;
+
+    res.status(201).json({ ok: true, data });
   } catch (err) {
     next(err);
   }
