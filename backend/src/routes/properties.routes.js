@@ -47,4 +47,22 @@ router.delete("/:id", async (req, res, next) => {
   }
 });
 
+router.patch("/:id", async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const updates = req.body;
+    const { data, error } = await supabase
+      .from("properties")
+      .update(updates)
+      .eq("id", id)
+      .select();
+
+    if (error) throw error;
+
+    res.status(200).json({ ok: true, data });
+  } catch (err) {
+    next(err);
+  }
+});
+
 export default router;
