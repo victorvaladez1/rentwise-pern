@@ -13,4 +13,17 @@ router.get("/", async (_req, res, next) => {
   }
 });
 
+router.get("/hosts", async (_req, res, next) => {
+  try {
+    const { data, error } = await supabase
+      .from("users")
+      .select("id, full_name, is_host")
+      .eq("is_host", true);
+    if (error) throw error;
+    res.json({ ok: true, data });
+  } catch (err) {
+    next(err);
+  }
+});
+
 export default router;
