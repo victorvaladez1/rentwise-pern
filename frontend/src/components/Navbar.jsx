@@ -15,6 +15,9 @@ export default function Navbar() {
           <NavLink to="/" className={link}>
             Home
           </NavLink>
+          <NavLink to="/properties" className={link}>
+            Properties
+          </NavLink>
           <NavLink to="/about" className={link}>
             About
           </NavLink>
