@@ -26,4 +26,17 @@ router.get("/hosts", async (_req, res, next) => {
   }
 });
 
+router.get("/guests", async (_req, res, next) => {
+  try {
+    const { data, error } = await supabase
+      .from("users")
+      .select("id, full_name, is_guest")
+      .eq("is_guest", true);
+    if (error) throw error;
+    res.json({ ok: true, data });
+  } catch (err) {
+    next(err);
+  }
+});
+
 export default router;
