@@ -30,4 +30,21 @@ router.post("/", async (req, res, next) => {
   }
 });
 
+router.delete("/:id", async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { data, error } = await supabase
+      .from("properties")
+      .delete()
+      .eq("id", id)
+      .select();
+
+    if (error) throw error;
+
+    res.status(200).json({ ok: true, data });
+  } catch (err) {
+    next(err);
+  }
+});
+
 export default router;
